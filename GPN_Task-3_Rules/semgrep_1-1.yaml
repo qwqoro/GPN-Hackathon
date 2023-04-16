@@ -1,0 +1,47 @@
+rules:
+- id: user-controllable-filepath
+  message: Введите дополнительную обработку имён загружаемых файлов или автоматическую генерацию имён, иначе пользователь сможет внедрить в имя файла синтаксическую конструкцию для доступа к родительским директориям.
+  languages: [python]
+  severity: WARNING
+  metadata:
+    cwe:
+      - "CWE-23: Relative Path Traversal"
+    category: security
+  patterns:
+    - pattern-either:
+      - pattern: |
+          $VAR = $REQ.files[$NAME]
+          ...
+      - pattern: |
+          $VAR = files[$NAME]
+          ...
+    - pattern-either:   
+      - pattern: open($NEWPATH)
+      - pattern: open($NEWPATH, ...)
+      - pattern: $FILE.save($NEWPATH)
+    - metavariable-pattern:
+        metavariable: $NEWPATH
+        patterns: 
+          - pattern-either:
+            - pattern: $VAR.$FILENAME
+            - pattern: |
+                "..." + $VAR.$FILENAME
+            - pattern: |
+               $VAR.$FILENAME + "..."
+            - pattern: |
+                "..." + $VAR.$FILENAME + "..."
+            - pattern: |
+               "...".format($VAR.$FILENAME)
+            - pattern: |
+                "...".format($VAR.$FILENAME, ...)
+            - pattern: |
+               "...".format(..., $VAR.$FILENAME)
+            - pattern: |
+               "...".format(..., $VAR.$FILENAME, ...)
+            - pattern: |
+                "..." % $VAR.$FILENAME
+            - pattern: |
+                f"...{$VAR.$FILENAME}..."
+          - metavariable-regex:
+              metavariable: $FILENAME
+              regex: (filename|name)

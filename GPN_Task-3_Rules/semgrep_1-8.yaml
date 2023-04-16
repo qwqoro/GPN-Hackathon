@@ -1,0 +1,32 @@
+rules:
+- id: js-extractor
+  mode: extract
+  languages: [html]
+  pattern: |
+    <script>
+      $...CODE
+    </script>
+  extract: |
+    $...CODE
+  dest-language: javascript
+
+- id: controlable-location
+  message: Убедитесь, что путь, передающийся в location, проверяется на легитимность и в достаточной мере санитизируется. В противном случае возможно создание ссылки для осуществления перенаправления пользователя по недоверенному пути или для вызова произвольного JavaScript кода.
+  languages: [javascript]
+  severity: INFO
+  metadata:
+    cwe:
+      - "CWE-601: URL Redirection to Untrusted Site ('Open Redirect')"
+      - "CWE-83: Improper Neutralization of Script in Attributes in a Web Page"
+    category: security
+  patterns:
+    - pattern-either:
+        - pattern: const $VAR = ...; ...
+        - pattern: var $VAR = ...; ...
+        - pattern: let $VAR = ...; ...
+        - pattern: $VAR = ...; ...
+    - pattern-either:
+        - pattern: location = $VAR;
+        - pattern: location = ...($VAR);
+        - pattern: location = (...).$VAR;
+        - pattern: location = (...)[$VAR];

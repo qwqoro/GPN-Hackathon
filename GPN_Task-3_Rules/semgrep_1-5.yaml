@@ -1,0 +1,26 @@
+rules:
+- id: buffer-overflow
+  message: Используется небезопасная функция, уязвимая к переполнению буфера. Убедитесь, что реализована дополнительная проверка длины передаваемого значения.
+  languages: [c,cpp]
+  severity: WARNING
+  metadata:
+    cwe:
+      - "CWE-120: Buffer Copy without Checking Size of Input ('Classic Buffer Overflow')"
+    category: security
+  patterns:
+    - pattern-either:
+      - pattern: char* $VAR; ...
+      - pattern: char *$VAR; ...
+      - pattern: char* $VAR = $VALUE; ...
+      - pattern: char *$VAR = $VALUE; ...
+      - pattern: $TYPE $VAR[$SIZE]; ...
+      - pattern: $TYPE $VAR[$SIZE] = $VALUE; ...
+    - pattern-either:
+      - pattern: gets($VAR)
+      - pattern: scanf($FORMAT, $VAR)
+      - pattern: scanf($FORMAT, ..., $VAR)
+      - pattern: scanf($FORMAT, $VAR, ...)
+      - pattern: strcat($VAR, $ANOTHERVAR)
+      - pattern: strcpy($VAR, $ANOTHERVAR)
+      - pattern: streadd($VAR, $ANOTHERVAR)
+

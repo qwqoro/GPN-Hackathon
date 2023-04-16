@@ -1,0 +1,25 @@
+rules:
+- id: acao-header-reflects-origin
+  message: Установление приложением в качестве значения заголовка ответа Access-Control-Allow-Origin значения из заголовка запроса Origin ведёт к предоставлению доступа к данным данного сайта любому другому домену.
+  languages: [javascript]
+  severity: WARNING
+  metadata:
+    cwe:
+      - "CWE-942: Permissive Cross-domain Policy with Untrusted Domains"
+    category: security
+    technology:
+      - nodejs
+  patterns:
+    - metavariable-pattern:
+        metavariable: $ORIGIN
+        pattern: $REQ.headers["origin"]
+    - pattern-either:
+      - pattern: $VAR = $ORIGIN; ...
+      - pattern: var $VAR = $ORIGIN; ...
+      - pattern: let $VAR = $ORIGIN; ...
+      - pattern: const $VAR = $ORIGIN; ...
+    - pattern-either:
+      - pattern: |
+          "Access-Control-Allow-Origin": $VAR
+      - pattern: |
+          $OBJECT["Access-Control-Allow-Origin"] = $VAR

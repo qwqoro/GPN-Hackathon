@@ -1,0 +1,14 @@
+rules:
+- id: debug-mode-on
+  message: Включён режим отладки. Включённый режим отладки позволяет пользователям увидеть чувствительную информацию, такую как, например, подробные коды ошибок, информацию о среде выполнения и настройках приложения. Отключите режим отладки, изменив значение на False, когда продукт будет выпущен в публичный доступ.
+  languages: [python]
+  severity: INFO
+  metadata:
+    cwe:
+      - "CWE-489: Active Debug Code"
+    category: security
+    technology:
+      - django
+  pattern-either:
+    - pattern-regex: "^['\"]?DEBUG['\"]?[ ]?[:=][ ]?True$"
+    - pattern: (...)["DEBUG"]=True

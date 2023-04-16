@@ -1,0 +1,15 @@
+rules:
+- id: hardcoded-secret-key
+  message: Секретный ключ SECRET_KEY, используемый для криптографической подписи значений, прописан в коде приложения в виде открытого текста. Уязвимые данные рекомендуется хранить внутри переменных окружения или конфигурационных файлов.
+  languages: [python]
+  severity: WARNING
+  metadata:
+    cwe:
+      - "CWE-321: Use of Hard-coded Cryptographic Key"
+    category: security
+    technology:
+      - django
+      - secrets
+  pattern-either:
+    - pattern-regex: "^['\"]?SECRET_KEY['\"]?[ ]?[:=][ ]?.*$"
+    - pattern: (...)["SECRET_KEY"]="=~/.*/"

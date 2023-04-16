@@ -1,0 +1,37 @@
+rules:
+- id: insecure-auth-cookie-role
+  message: В ходе обработки запроса значение cookie сравнивается со строкой, обозначающей имя роли. Заметьте, что использование такой конструкции в качестве механизма аутентификации недопустимо.
+  languages: [go, golang]
+  severity: INFO
+  metadata:
+    cwe:
+      - "CWE-287: Improper Authentication"
+    category: security
+  mode: taint
+  pattern-sources:
+    - patterns:
+      - pattern-inside: http.HandleFunc(...)
+      - pattern: $REQ.Cookie(...)
+  pattern-sinks:
+    - pattern: |
+        ... == "=~/(admin|administrator)/i"
+    - pattern: |
+        "=~/(admin|administrator)/i" == ...
+
+- id: insecure-auth-xff
+  message: В ходе обработки запроса значение заголовка запроса X-Forwarded-For сравнивается со строкой, обозначающей адрес. Заметьте, что использование такой конструкции в качестве механизма аутентификации недопустимо.
+  languages: [go, golang]
+  severity: INFO
+  metadata:
+    cwe:
+      - "CWE-287: Improper Authentication"
+    category: security
+  mode: taint
+  pattern-sources:
+    - patterns: 
+      - pattern-inside: http.HandleFunc(...)
+      - pattern-either:
+        - pattern: $REQ.Header.Get("=~/X-Forwarded-For/i")
+        - pattern-regex: "(127.0.0.1|localhost|0.0.0.0)"
+  pattern-sinks:
+    - pattern: ... == ...

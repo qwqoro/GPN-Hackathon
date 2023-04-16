@@ -1,0 +1,132 @@
+                    
+                    
+┌──────────────────┐
+│ 15 Code Findings │
+└──────────────────┘
+                                                     
+   GPN/examples/example1/example1.py 
+       GPN.semgrep-rules.finished.user-controllable-filepath                               
+          Введите дополнительную обработку имён загружаемых файлов или автоматическую генерацию имён,
+          иначе пользователь сможет внедрить в имя файла синтаксическую конструкцию для доступа к    
+          родительским директориям.                                                                  
+                                                                                                     
+           35┆ f.save(app.config["UPLOAD_FOLDER"] + f.filename)
+                                             
+   GPN/examples/example2.php 
+       GPN.semgrep-rules.finished.htmlspecialchars-without-flags                        
+          Функция htmlspecialchars по умолчанию, без явного установления дополнительных флагов, не
+          конвертирует одинарные кавычки. Убедитесь, что такое поведение необходимо, иначе        
+          воспользуйтесь флагом ENT_QUOTES.                                                       
+                                                                                                  
+           18┆ email = '<?php echo htmlspecialchars($_GET['email']);?>';
+                                              
+   GPN/examples/example3.html 
+       GPN.semgrep-rules.finished.event-listener-messages                             
+          Введён обработчик событий типа message, но не происходит анализа источника событий.   
+          Необходимо реализовать обработку событий с учётом их источника для ограничения доступа
+          недоверенных источников к возможности отправки событий приложению.                    
+                                                                                                
+           19┆ window.addEventListener("message", (event)=>{
+           20┆   console.log("[OK] Connected!")
+           21┆   address = event.data
+           22┆   document.getElementById('out').innerHTML += `<u>${address}</u>`
+           23┆ });
+                                            
+   GPN/examples/example4.go 
+       GPN.semgrep-rules.finished.insecure-auth-cookie-role                             
+          В ходе обработки запроса значение cookie сравнивается со строкой, обозначающей имя роли.
+          Заметьте, что использование такой конструкции в качестве механизма аутентификации       
+          недопустимо.                                                                            
+                                                                                                  
+           27┆ if strings.ToLower(h.Role.Value) == "admin" {
+            ⋮┆----------------------------------------
+       GPN.semgrep-rules.finished.insecure-auth-xff                                         
+          В ходе обработки запроса значение заголовка запроса X-Forwarded-For сравнивается со строкой,
+          обозначающей адрес. Заметьте, что использование такой конструкции в качестве механизма      
+          аутентификации недопустимо.                                                                 
+                                                                                                      
+           29┆ if host == strings.Split(h.ClientIP, ":")[0] {
+                                           
+   GPN/examples/example5.c 
+       GPN.semgrep-rules.finished.buffer-overflow                                
+          Используется небезопасная функция, уязвимая к переполнению буфера. Убедитесь, что
+          реализована дополнительная проверка длины передаваемого значения.                
+                                                                                           
+           21┆ gets(tryOTP);
+                                            
+   GPN/examples/example6.js 
+       GPN.semgrep-rules.finished.acao-header-reflects-origin                             
+          Установление приложением в качестве значения заголовка ответа Access-Control-Allow-Origin 
+          значения из заголовка запроса Origin ведёт к предоставлению доступа к данным данного сайта
+          любому другому домену.                                                                    
+                                                                                                    
+           23┆ "Access-Control-Allow-Origin": origin,
+                                             
+   GPN/examples/example7.php 
+       GPN.semgrep-rules.finished.htmlspecialchars-without-flags                        
+          Функция htmlspecialchars по умолчанию, без явного установления дополнительных флагов, не
+          конвертирует одинарные кавычки. Убедитесь, что такое поведение необходимо, иначе        
+          воспользуйтесь флагом ENT_QUOTES.                                                       
+                                                                                                  
+           15┆ $file =  htmlspecialchars( PathFilter($_GET['file']) );
+                                              
+   GPN/examples/example8.html 
+       GPN.semgrep-rules.finished.controlable-location                                    
+          Убедитесь, что путь, передающийся в location, проверяется на легитимность и в достаточной 
+          мере санитизируется. В противном случае возможно создание ссылки для осуществления        
+          перенаправления пользователя по недоверенному пути или для вызова произвольного JavaScript
+          кода.                                                                                     
+                                                                                                    
+           16┆ location = filter(path);
+                                            
+   GPN/examples/example9.py 
+       GPN.semgrep-rules.finished.flask-ssti                                             
+          В связи с недостаточной санитизацией вводимого в шаблон значения возможно инъектирование 
+          атакующим конструкции, распознаваемой шаблонизатором Jinja в качестве валидной, что может
+          привести к исполнению произвольного кода сервером.                                       
+                                                                                                   
+           14┆ tpl = ('''
+           15┆ <html>
+           16┆ <head>
+           17┆  <link rel="stylesheet" href="{{ domain }}/styles.css">
+           18┆ </head>
+           19┆ <body>
+           20┆ <script src="{{ domain }}/main.js"></script>
+           21┆ <h3 id="search">No result for: %s</h3>
+           22┆  </body>
+           23┆ </html>
+           24┆ ''' % s)
+                                           
+   GPN/vuln-app/web/app.py 
+       GPN.semgrep-rules.finished.debug-mode-on                                          
+          Включён режим отладки. Включённый режим отладки позволяет пользователям увидеть          
+          чувствительную информацию, такую как, например, подробные коды ошибок, информацию о среде
+          выполнения и настройках приложения. Отключите режим отладки, изменив значение на False,  
+          когда продукт будет выпущен в публичный доступ.                                          
+                                                                                                   
+            7┆ DEBUG = True
+            ⋮┆----------------------------------------
+       GPN.semgrep-rules.finished.hardcoded-credentials                                  
+          Учётные данные для осуществления доступа к базе данных прописаны в коде приложения в виде
+          открытого текста. Уязвимые данные рекомендуется хранить внутри переменных окружения или  
+          конфигурационных файлов.                                                                 
+                                                                                                   
+           34┆ 'USER': 'postgres',
+            ⋮┆----------------------------------------
+           35┆ 'PASSWORD': 'postgres',
+            ⋮┆----------------------------------------
+       GPN.semgrep-rules.finished.hardcoded-secret-key                                    
+          Секретный ключ SECRET_KEY, используемый для криптографической подписи значений, прописан в
+          коде приложения в виде открытого текста. Уязвимые данные рекомендуется хранить внутри     
+          переменных окружения или конфигурационных файлов.                                         
+                                                                                                    
+            8┆ SECRET_KEY = 'cib_app'
+                                                  
+   GPN/vuln-app/web/vuln/views.py 
+       GPN.semgrep-rules.finished.django-sqli-cve-2022-34265                           
+          Функции Trunc и Extract фреймворка Django подвержены SQL инъекциям при передаче им в   
+          недостаточной мере санитизированных значений в качестве аргументов kind или lookup_name
+          соответственно. Удостоверьтесь в полноте обработки значений этих аргументов.           
+                                                                                                 
+           21┆ objects = list(WebLog.objects.annotate(time=Trunc('created_time',                              
+  date)).values('time').order_by('-time').annotate(count=Count('id')))                                            

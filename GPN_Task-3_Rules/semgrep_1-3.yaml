@@ -1,0 +1,27 @@
+rules:
+- id: js-extractor
+  mode: extract
+  languages: [html]
+  pattern: |
+    <script>
+      $...CODE
+    </script>
+  extract: |
+    $...CODE
+  dest-language: javascript
+
+- id: event-listener-messages
+  message: Введён обработчик событий типа message, но не происходит анализа источника событий. Необходимо реализовать обработку событий с учётом их источника для ограничения доступа недоверенных источников к возможности отправки событий приложению.
+  languages: [javascript]
+  severity: WARNING
+  metadata:
+    cwe:
+      - "CWE-159: Improper Handling of Invalid Use of Special Elements"
+    category: security
+  patterns:
+    - pattern-either:
+      - pattern-inside: addEventListener("message", ...)
+      - pattern-inside: $OBJECT.addEventListener("message", ...)
+      - pattern-inside: attachEvent("onmessage", ...);
+      - pattern-inside: $OBJECT.attachEvent("onmessage", ...);
+    - pattern-not-regex: "event.origin"

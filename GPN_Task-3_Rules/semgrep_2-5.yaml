@@ -1,0 +1,14 @@
+rules:
+- id: django-sqli-cve-2022-34265
+  message: Функции Trunc и Extract фреймворка Django подвержены SQL инъекциям при передаче им в недостаточной мере санитизированных значений в качестве аргументов kind или lookup_name соответственно. Удостоверьтесь в полноте обработки значений этих аргументов.
+  languages: [python]
+  severity: WARNING
+  metadata:
+    references:
+      - https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2022-34265
+    cwe:
+      - "CWE-89: Improper Neutralization of Special Elements used in an SQL Command ('SQL Injection')"
+    category: security
+    technology:
+      - django
+  pattern-regex: "(django.db.models.functions.|db.models.functions.|models.functions.|functions.)?(Trunc|Extract)[(][^)]*((kind|lookup_name)?[ ]?=[ ]?)?[)]"

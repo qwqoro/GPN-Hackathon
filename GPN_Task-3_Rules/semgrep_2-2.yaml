@@ -1,0 +1,12 @@
+rules:
+- id: hardcoded-credentials
+  message: Учётные данные для осуществления доступа к базе данных прописаны в коде приложения в виде открытого текста. Уязвимые данные рекомендуется хранить внутри переменных окружения или конфигурационных файлов.
+  languages: [python]
+  severity: WARNING
+  metadata:
+    cwe:
+      - "CWE-798: Use of Hard-coded Credentials"
+    category: security
+    technology:
+      - secrets
+  pattern-regex: "['\"]?(?i)(user|username|pass|password)['\"]?[ ]?[:=][ ]?.*"

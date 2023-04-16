@@ -1,0 +1,20 @@
+rules:
+- id: non-recursive-filepath-sanitization
+  message: Обработка пути к файлу находится вне цикла, что может привести к обходу фильтрации нежелательных подстрок.
+  languages: [php]
+  severity: WARNING
+  metadata:
+    category: security
+  mode: taint
+  pattern-sources:
+    - patterns:
+      - pattern-not-inside: while (...){...}
+      - pattern-either:
+        - pattern: preg_replace(...)
+        - pattern: str_replace(...)
+  pattern-sinks:
+    - pattern-either:
+      - pattern: file_get_contents(...)
+      - pattern: fopen(...)
+      - pattern: file(...)
+      - pattern: readfile(...)

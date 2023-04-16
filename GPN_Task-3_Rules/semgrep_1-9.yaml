@@ -1,0 +1,50 @@
+rules:
+- id: flask-ssti
+  message: В связи с недостаточной санитизацией вводимого в шаблон значения возможно инъектирование атакующим конструкции, распознаваемой шаблонизатором Jinja в качестве валидной, что может привести к исполнению произвольного кода сервером.
+  languages: [python]
+  severity: WARNING
+  metadata:
+    cwe:
+      - "CWE-1336: Improper Neutralization of Special Elements Used in a Template Engine"
+    category: security
+    technology:
+      - flask
+  patterns:
+    - pattern-either:
+      - pattern: |
+          $TEMPLATE = ... + $S
+      - pattern: |
+          $TEMPLATE = $S + ...
+      - pattern: |
+          $TEMPLATE = ... + $S + ...
+      - pattern: |
+          $TEMPLATE = "...".format($S)
+      - pattern: |
+          $TEMPLATE = "...".format(..., $S)
+      - pattern: |
+          $TEMPLATE = "...".format($S, ...)
+      - pattern: |
+          $TEMPLATE = "...".format(..., $S, ...)
+      - pattern: |
+          $TEMPLATE = "..." % $S
+      - pattern: |
+          $TEMPLATE = f"...{$S}..."
+    - pattern-either:
+      - pattern: |
+          ...
+          render_template_string($TEMPLATE, ...)
+      - pattern: |
+          ...
+          return render_template_string($TEMPLATE, ...)
+      - pattern: |
+          ...
+          return render_template_string($TEMPLATE, ...), $ELSE
+      - pattern: |
+          ...
+          flask.render_template_string($TEMPLATE, ...)
+      - pattern: |
+          ...
+          return flask.render_template_string($TEMPLATE, ...)
+      - pattern: |
+          ...
+          return flask.render_template_string($TEMPLATE, ...), $ELSE

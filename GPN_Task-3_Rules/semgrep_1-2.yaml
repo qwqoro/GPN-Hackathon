@@ -1,0 +1,20 @@
+rules:
+- id: echo-of-user-controllable-value
+  message: Выводится значение, подконтрольное пользователю. Введите дополнительную обработку выводимого значения.
+  languages: [php]
+  severity: WARNING
+  metadata:
+    cwe:
+      - "CWE-159: Improper Handling of Invalid Use of Special Elements"
+    category: security
+  pattern: echo $_GET[$ARG];
+
+- id: htmlspecialchars-without-flags
+  message: Функция htmlspecialchars по умолчанию, без явного установления дополнительных флагов, не конвертирует одинарные кавычки. Убедитесь, что такое поведение необходимо, иначе воспользуйтесь флагом ENT_QUOTES.
+  languages: [php]
+  severity: INFO
+  metadata:
+    cwe:
+      - "CWE-159: Improper Handling of Invalid Use of Special Elements"
+    category: security
+  pattern: htmlspecialchars($VALUE);
