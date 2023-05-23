@@ -1,4 +1,4 @@
-![banner](banner.gif)
+![gif](images/gif.gif)
 
 <p align="center">
     <code> [ Solution to the Task 1: <a href="GPN_Task-1.pdf"><code>GPN_Task-1.pdf</code></a> ] </code><br>
